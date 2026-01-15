@@ -1,8 +1,9 @@
 "use client";
 import React from "react";
-import { LogOut, User, Settings, Menu, Moon, Sun } from "lucide-react"; // Icons
+import { LogOut, Moon, Sun } from "lucide-react"; // Icons
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,7 +16,9 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-backdrop-filter:bg-white/60 dark:bg-zinc-950/60 dark:border-zinc-800">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        <div className="flex items-center  gap-2">
+        <div className="flex items-center gap-3">
+          <SidebarTrigger />
+
           <h1 className="text-xl font-bold tracking-tight text-primary">
             BARBER DASHBOARD
           </h1>
