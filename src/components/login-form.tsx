@@ -1,5 +1,8 @@
+"use client";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import login from "@/app/(auth)/login/action";
+import { useActionState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Field,
@@ -9,16 +12,17 @@ import {
   FieldSeparator,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-
+const initialState = { ok: false, message: "" };
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const [state, formAction, isPending] = useActionState(login, initialState);
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="overflow-hidden p-0">
         <CardContent className="grid p-0 md:grid-cols-2">
-          <form className="p-6 md:p-8">
+          <form action={formAction} className="p-6 md:p-8" noValidate>
             <FieldGroup>
               <div className="flex flex-col items-center gap-2 text-center">
                 <h1 className="text-2xl font-bold">Welcome back</h1>
@@ -30,9 +34,9 @@ export function LoginForm({
                 <FieldLabel htmlFor="email">Email</FieldLabel>
                 <Input
                   id="email"
+                  name="email"
                   type="email"
                   placeholder="m@example.com"
-                  required
                 />
               </Field>
               <Field>
@@ -45,10 +49,15 @@ export function LoginForm({
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" type="password" required />
+                <Input id="password" type="password" name="password" />
               </Field>
+              {state?.message ? (
+                <p className="text-sm text-red-600">{state.message}</p>
+              ) : null}
               <Field>
-                <Button type="submit">Login</Button>
+                <Button type="submit" disabled={isPending}>
+                  {isPending ? "Logging in..." : "Login"}
+                </Button>
               </Field>
             </FieldGroup>
           </form>
