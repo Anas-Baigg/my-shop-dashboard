@@ -1,10 +1,9 @@
 import { cookies } from "next/headers";
 import AppHeader from "@/components/Header";
 import { ThemeProvider } from "@/components/theme-provider";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 
-// Added 'export default' here!
 export default async function DashboardGroupLayout({
   children,
 }: {
