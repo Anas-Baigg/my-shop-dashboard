@@ -4,6 +4,8 @@ import { LogOut, Moon, Sun } from "lucide-react"; // Icons
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { useShop } from "@/context/shop-context";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,9 +15,10 @@ import {
 
 export default function Header() {
   const { setTheme } = useTheme();
+  const { shops, currentShopId, setCurrentShopId, loading } = useShop();
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-backdrop-filter:bg-white/60 dark:bg-zinc-950/60 dark:border-zinc-800">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4">
+      <div className="flex h-16 items-center justify-between px-4">
         <div className="flex items-center gap-3">
           <SidebarTrigger />
 
@@ -24,6 +27,29 @@ export default function Header() {
           </h1>
         </div>
         <div className="flex items-center gap-4">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="min-w-30 justify-center">
+                {loading
+                  ? "Loading..."
+                  : shops
+                      .find((s) => s.id === currentShopId)
+                      ?.name.toLocaleUpperCase() ?? "Select shop"}
+              </Button>
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent align="start">
+              {shops.map((shop) => (
+                <DropdownMenuItem
+                  key={shop.id}
+                  onClick={() => setCurrentShopId(shop.id)}
+                >
+                  {shop.name.toLocaleUpperCase()}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="icon">
