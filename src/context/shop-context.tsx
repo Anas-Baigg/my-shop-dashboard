@@ -6,7 +6,7 @@ type Shop = { id: string; name: string };
 
 type ShopContextType = {
   shops: Shop[];
-  currentShopId: String | null;
+  currentShopId: string | null;
   setCurrentShopId: (id: string) => void;
   loading: boolean;
 };
