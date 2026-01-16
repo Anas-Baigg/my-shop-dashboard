@@ -15,7 +15,7 @@ export async function PATCH(req: Request, { params }: RouteContext) {
   const { data: userData, error: userErr } = await supabase.auth.getUser();
   if (userErr || !userData.user) return jsonError("Unauthorized", 401);
 
-  // FIX: Await params before destructuring
+  
   const { id } = await params;
   if (!id) return jsonError("Missing employee id", 400);
 
