@@ -13,21 +13,11 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Pencil } from "lucide-react";
-import { validateAdminPassword, validateShopName } from "@/lib/validators/shop";
+import { UpdateShopAction } from "@/app/(dashboard)/shops/action";
 
 export type Shop = { id: string; name: string; admin_password: number };
 
-export function EditShopDialog({
-  shop,
-  onSave,
-}: {
-  shop: Shop;
-  onSave: (
-    id: string,
-    name: string,
-    admin_password: number
-  ) => Promise<void> | void;
-}) {
+export function EditShopDialog({ shop }: { shop: Shop }) {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState(shop.name);
   const [pass, setPass] = useState(String(shop.admin_password));
@@ -39,17 +29,19 @@ export function EditShopDialog({
     setPass(String(shop.admin_password));
   }, [open, shop.id, shop.name, shop.admin_password]);
 
-  function handleSave() {
-    const nameV = validateShopName(name);
-    if (!nameV.ok) return toast.error(nameV.message);
+  async function handleSave() {
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("password", pass);
+    const result = await UpdateShopAction(shop.id, formData);
 
-    const passV = validateAdminPassword(pass);
-    if (!passV.ok) return toast.error(passV.message);
-
-    onSave(shop.id, nameV.value, passV.value);
-    setOpen(false);
+    if (result?.success) {
+      toast.success(result.message);
+      setOpen(false);
+    } else {
+      toast.error(result?.message || "An unknown error occurred");
+    }
   }
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>

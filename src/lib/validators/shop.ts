@@ -1,21 +1,21 @@
-// lib/validators/shop.ts
-export function validateShopName(name: string) {
+"use server"
+export async function validateShopName(name: string) {
   const trimmed = name.trim();
   if (!trimmed) return { ok: false as const, message: "Name is required." };
 
   // letters, numbers, spaces only
-  const nameRegex = /^[a-zA-Z0-9 ]+$/;
+  const nameRegex = /^[a-zA-Z ]+$/;
   if (!nameRegex.test(trimmed)) {
     return {
       ok: false as const,
-      message: "Invalid Name: Only letters, numbers, and spaces allowed.",
+      message: "Invalid Name: Only letters, and spaces allowed.",
     };
   }
 
   return { ok: true as const, value: trimmed };
 }
 
-export function validateAdminPassword(pass: string) {
+export async function validateAdminPassword(pass: string) {
   const trimmed = pass.trim();
 
   // exactly 5 digits AND first digit cannot be 0

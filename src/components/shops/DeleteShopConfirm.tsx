@@ -13,6 +13,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
 
 export function DeleteShopConfirm({
   id,
@@ -21,6 +22,15 @@ export function DeleteShopConfirm({
   id: string;
   onDelete: (id: string) => Promise<void> | void;
 }) {
+  async function handleConfirm() {
+    try {
+      await onDelete(id);
+      toast.success("Shop deleted!");
+    } catch (e) {
+      console.log(e);
+      toast.error("Failed to delete");
+    }
+  }
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -40,7 +50,7 @@ export function DeleteShopConfirm({
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
-            onClick={() => onDelete(id)}
+            onClick={handleConfirm}
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
           >
             Delete
