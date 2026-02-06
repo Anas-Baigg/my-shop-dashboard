@@ -1,11 +1,15 @@
 "use client";
+
 import {
   PersonStanding,
   ReceiptText,
-  Inbox,
-  Search,
-  Settings,
+  Box, // for Products
+  Scissors, // for Cuts
+  Store, // for Shops
+  CreditCard, // for Till Balance
+  Clock, // for Time Logs
 } from "lucide-react";
+
 import {
   Sidebar,
   SidebarContent,
@@ -16,6 +20,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+
 const items = [
   {
     title: "Reports",
@@ -27,28 +32,33 @@ const items = [
     url: "/employee",
     icon: PersonStanding,
   },
-
   {
-    title: "Produts",
+    title: "Products",
     url: "/products",
-    icon: Search,
+    icon: Box,
   },
   {
     title: "Cuts",
     url: "/cuts",
-    icon: Inbox,
+    icon: Scissors,
   },
   {
     title: "Shops",
     url: "/shops",
-    icon: Settings,
+    icon: Store,
   },
   {
     title: "Till Balance",
     url: "/tillBalance",
-    icon: Settings,
+    icon: CreditCard,
+  },
+  {
+    title: "Time Logs",
+    url: "/timeLogs",
+    icon: Clock,
   },
 ];
+
 export function AppSidebar() {
   return (
     <Sidebar>
@@ -60,8 +70,8 @@ export function AppSidebar() {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
-                      <item.icon />
+                    <a href={item.url} className="flex items-center gap-2">
+                      <item.icon className="h-4 w-4" />
                       <span>{item.title}</span>
                     </a>
                   </SidebarMenuButton>
