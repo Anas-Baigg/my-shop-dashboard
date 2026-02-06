@@ -6,8 +6,6 @@ type Shop = { id: string; name: string };
 
 type ShopContextType = {
   shops: Shop[];
-  currentShopId: string | null;
-  setCurrentShopId: (id: string) => void;
   loading: boolean;
 };
 
@@ -21,9 +19,7 @@ export function ShopProvider({
   children: React.ReactNode;
 }) {
   const supabase = createClient();
-
   const [shops, setShops] = useState<Shop[]>([]);
-  const [currentShopId, setCurrentShopId] = useState<string | null>(null);
   const [loading, setloading] = useState(true);
 
   useEffect(() => {
@@ -34,11 +30,8 @@ export function ShopProvider({
         .from("shops")
         .select("id,name")
         .eq("owner_id", userId);
-      if (!error && data) {
+      if (data) {
         setShops(data);
-        if (!currentShopId && data.length > 0) {
-          setCurrentShopId(data[0].id);
-        }
       }
       setloading(false);
     }
@@ -48,8 +41,6 @@ export function ShopProvider({
     <ShopContext.Provider
       value={{
         shops,
-        currentShopId,
-        setCurrentShopId,
         loading,
       }}
     >

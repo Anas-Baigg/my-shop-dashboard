@@ -5,6 +5,7 @@ import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useShop } from "@/context/shop-context";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 
 import {
   DropdownMenu,
@@ -14,8 +15,28 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export default function Header() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+
   const { setTheme } = useTheme();
-  const { shops, currentShopId, setCurrentShopId, loading } = useShop();
+  const { shops } = useShop();
+  // 1. Get the ID from the URL instead of context state
+  const currentShopId = searchParams.get("shopId");
+  // 2. Find the selected shop object so we can show its name
+  const selectedShop = shops.find((s) => s.id === currentShopId) || shops[0];
+
+  const handleShopChange = (id: string) => {
+    // 3. Create a new "URL Search Params" object based on current URL
+    const params = new URLSearchParams(searchParams.toString());
+
+    // 4. Update the shopId parameter
+    params.set("shopId", id);
+
+    // 5. Navigate to the new URL (keeps you on the same page, just changes the ID)
+    router.push(`${pathname}?${params.toString()}`);
+  };
+
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-backdrop-filter:bg-white/60 dark:bg-zinc-950/60 dark:border-zinc-800">
       <div className="flex h-16 items-center justify-between px-4">
@@ -30,11 +51,7 @@ export default function Header() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="min-w-30 justify-center">
-                {loading
-                  ? "Loading..."
-                  : shops
-                      .find((s) => s.id === currentShopId)
-                      ?.name.toLocaleUpperCase() ?? "Select shop"}
+                {selectedShop?.name.toUpperCase() || "SELECT SHOP"}
               </Button>
             </DropdownMenuTrigger>
 
@@ -42,9 +59,9 @@ export default function Header() {
               {shops.map((shop) => (
                 <DropdownMenuItem
                   key={shop.id}
-                  onClick={() => setCurrentShopId(shop.id)}
+                  onClick={() => handleShopChange(shop.id)}
                 >
-                  {shop.name.toLocaleUpperCase()}
+                  {shop.name.toUpperCase()}
                 </DropdownMenuItem>
               ))}
             </DropdownMenuContent>
