@@ -13,20 +13,28 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-
+import { toast } from "sonner";
 export function DeleteEmployeeConfirm({
   id,
   onDelete,
-  disabled,
 }: {
   id: string;
-  onDelete: (id: string) => void;
-  disabled: boolean;
+  onDelete: (id: string) => Promise<any> | void;
 }) {
+  async function handleConfirm() {
+    try {
+      await onDelete(id);
+      toast.success("Employee Deleted!");
+    } catch (e) {
+      console.log(e);
+      toast.error("Failed To Delete");
+    }
+  }
+
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="destructive" size="icon" disabled={disabled}>
+        <Button variant="destructive" size="icon">
           <Trash2 className="h-4 w-4" />
         </Button>
       </AlertDialogTrigger>
@@ -40,7 +48,7 @@ export function DeleteEmployeeConfirm({
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
-            onClick={() => onDelete(id)}
+            onClick={handleConfirm}
             className="bg-destructive text-white hover:bg-destructive/90"
           >
             Delete

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react"; // Added useEffect
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -13,10 +13,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Pencil } from "lucide-react";
-import {
-  validateEmployeeName,
-  validatePasscode,
-} from "@/lib/validators/employee";
+import { updateEmployeeAction } from "@/app/(dashboard)/employee/action";
 
 type Employee = {
   id: string;
@@ -28,56 +25,43 @@ type Employee = {
   isActive: boolean;
 };
 
-export function EditEmployeeDialog({
-  employee,
-  onSave,
-  disabled,
-}: {
-  employee: Employee;
-  onSave: (id: string, patch: any) => void;
-  disabled: boolean;
-}) {
+export function EditEmployeeDialog({ employee }: { employee: Employee }) {
   const [name, setName] = useState(employee.name);
-  const [passcode, setPasscode] = useState("");
+  const [passcode, setPasscode] = useState(employee.passcode?.toString() || "");
   const [open, setOpen] = useState(false);
-
+  const [isPending, setIsPending] = useState(false);
   // Keep the form in sync if the employee prop changes or dialog re-opens
   useEffect(() => {
     if (open) {
       setName(employee.name);
-      setPasscode("");
+      setPasscode(employee.passcode?.toString() || "");
     }
-  }, [open, employee.name]);
+  }, [open, employee.name, employee.passcode]);
 
-  const handleUpdate = () => {
-    const nameError = validateEmployeeName(name);
-    if (nameError) return toast.error(nameError);
+  async function handleUpdate() {
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("passcode", passcode);
+    try {
+      const result = await updateEmployeeAction(employee.id, formData);
 
-    const patch: any = {};
-
-    // Only add to patch if actually changed
-    if (name.trim() !== employee.name) {
-      patch.name = name.trim().toUpperCase();
+      if (result?.success) {
+        toast.success(result.message);
+        setOpen(false);
+      } else {
+        toast.error(result?.message || "Failed to update");
+      }
+    } catch (error) {
+      toast.error("Server error");
+    } finally {
+      setIsPending(false);
     }
-
-    if (passcode.trim()) {
-      const passError = validatePasscode(passcode);
-      if (passError) return toast.error(passError);
-      patch.passcode = Number(passcode);
-    }
-
-    if (Object.keys(patch).length === 0) {
-      return setOpen(false); // No changes made
-    }
-
-    onSave(employee.id, patch);
-    setOpen(false);
-  };
+  }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="icon" disabled={disabled}>
+        <Button variant="outline" size="icon">
           <Pencil className="h-4 w-4" />
         </Button>
       </DialogTrigger>
@@ -122,8 +106,8 @@ export function EditEmployeeDialog({
           </div>
         </div>
         <DialogFooter>
-          <Button onClick={handleUpdate} disabled={disabled}>
-            {disabled ? "Saving..." : "Save Changes"}
+          <Button onClick={handleUpdate} disabled={isPending}>
+            {isPending ? "Updating..." : "Update Employee"}
           </Button>
         </DialogFooter>
       </DialogContent>

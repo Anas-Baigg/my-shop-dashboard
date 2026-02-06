@@ -25,10 +25,10 @@ export function DeleteShopConfirm({
   async function handleConfirm() {
     try {
       await onDelete(id);
-      toast.success("Shop deleted!");
+      toast.success("Shop Deleted!");
     } catch (e) {
       console.log(e);
-      toast.error("Failed to delete");
+      toast.error("Failed To Delete");
     }
   }
   return (
