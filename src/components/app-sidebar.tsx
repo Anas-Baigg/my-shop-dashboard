@@ -43,6 +43,11 @@ const items = [
     url: "/shops",
     icon: Settings,
   },
+  {
+    title: "Till Balance",
+    url: "/tillBalance",
+    icon: Settings,
+  },
 ];
 export function AppSidebar() {
   return (
