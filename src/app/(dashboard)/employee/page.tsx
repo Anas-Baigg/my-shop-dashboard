@@ -29,8 +29,8 @@ export default async function EmployeesPage({
     .order("name");
 
   return (
-    <div className="p-6 space-y-6 max-w-7xl mx-auto md:p-12">
-      <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-4">
+    <div className="p-6 space-y-6 flex flex-col gap-4 max-w-7xl mx-auto md:p-24">
+      <div className="flex justify-between items-end">
         <div>
           <h2 className="text-3xl font-bold tracking-tight">Employees</h2>
           <p className="text-muted-foreground">Manage staff for your shops.</p>
