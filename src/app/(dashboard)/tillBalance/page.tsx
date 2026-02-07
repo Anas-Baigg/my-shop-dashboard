@@ -44,20 +44,22 @@ export default async function TillPage({
   const { data: balances } = await query;
 
   return (
-    <div className="p-6 space-y-6 flex flex-col gap-4 max-w-7xl mx-auto md:p-24">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <div className="p-6 space-y-6 flex flex-col gap-4 max-w-7xl mx-auto md:p-16">
+      <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Till History</h2>
-          <p className="text-muted-foreground">
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tight">
+            Till History
+          </h2>
+          <p className="text-sm text-muted-foreground">
             Search and correct daily balances synced from the till.
           </p>
-          <div className="flex gap-2">
-            <DateRangePicker />
-          </div>
+        </div>
+        <div className="w-full sm:w-auto">
+          <DateRangePicker />
         </div>
       </div>
 
-      <div className="rounded-md border">
+      <div className="rounded-md border overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow>

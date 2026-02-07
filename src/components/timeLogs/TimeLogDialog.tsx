@@ -77,8 +77,8 @@ export function TimeLogDialog({ record }: { record: any }) {
                 <Popover open={openIn} onOpenChange={setOpenIn}>
                   <PopoverTrigger asChild>
                     <Button
-                      variant="outline"
-                      className="w-full justify-between font-normal"
+                      variant="default"
+                      className="data-[empty=true]:text-muted-foreground w-53 justify-between text-left font-normal"
                     >
                       {dateIn ? format(dateIn, "dd MMM yyyy") : "Pick a date"}
                       <ChevronDownIcon className="h-4 w-4 opacity-50" />
@@ -124,8 +124,8 @@ export function TimeLogDialog({ record }: { record: any }) {
                 <Popover open={openOut} onOpenChange={setOpenOut}>
                   <PopoverTrigger asChild>
                     <Button
-                      variant="outline"
-                      className="w-full justify-between font-normal"
+                      variant="default"
+                      className="data-[empty=true]:text-muted-foreground w-53 justify-between text-left font-normal"
                     >
                       {dateOut ? format(dateOut, "dd MMM yyyy") : "Pick a date"}
                       <ChevronDownIcon className="h-4 w-4 opacity-50" />
@@ -143,7 +143,7 @@ export function TimeLogDialog({ record }: { record: any }) {
                     />
                   </PopoverContent>
                 </Popover>
-                {/* Hidden input for FormData */}
+                {/* Hidden input for        */}
                 <input
                   type="hidden"
                   name="clock_out_date"

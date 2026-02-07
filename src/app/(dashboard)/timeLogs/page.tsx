@@ -33,15 +33,17 @@ export default async function TimeLogsPage({
   const { data: logs } = await query;
 
   return (
-    <div className="p-6 space-y-6 flex flex-col gap-4 max-w-7xl mx-auto md:p-24">
-      <div className="flex justify-between items-center">
-        <h2 className="text-3xl font-bold">Attendance Logs</h2>
-        <div className="flex gap-2">
+    <div className="p-6 space-y-6 flex flex-col gap-4 max-w-7xl mx-auto md:p-16">
+      <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center">
+        <h2 className="text-2xl md:text-3xl font-bold tracking-tight">
+          Attendance Logs
+        </h2>
+        <div className="w-full sm:w-auto">
           <DateRangePicker />
         </div>
       </div>
 
-      <div className="rounded-md border">
+      <div className="rounded-md border overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow>

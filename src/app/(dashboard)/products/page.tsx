@@ -48,25 +48,28 @@ export default async function ProductsPage({
     .order("productName", { ascending: true });
 
   return (
-    <div className="p-6 space-y-6 flex flex-col gap-4 max-w-7xl mx-auto md:p-24">
-      <div className="flex justify-between items-end">
+    <div className="p-6 space-y-6 flex flex-col gap-4 max-w-7xl mx-auto md:p-16">
+      <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Products</h2>
-          <p className="text-muted-foreground">
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tight">
+            Products
+          </h2>
+          <p className="text-sm text-muted-foreground">
             Manage products for your shop.
           </p>
         </div>
-
-        <ServiceDialog
-          shopId={activeShopId}
-          title="Product"
-          nameLabel="Product"
-          nameField="product"
-          onSubmit={createProductAction}
-        />
+        <div className="w-full sm:w-auto">
+          <ServiceDialog
+            shopId={activeShopId}
+            title="Product"
+            nameLabel="Product"
+            nameField="product"
+            onSubmit={createProductAction}
+          />
+        </div>
       </div>
 
-      <div className="rounded-md border">
+      <div className="rounded-md border overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow>
