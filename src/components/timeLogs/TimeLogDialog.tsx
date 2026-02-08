@@ -61,7 +61,7 @@ export function TimeLogDialog({ record }: { record: any }) {
           <Pencil className="h-4 w-4" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[400px]">
+      <DialogContent className="sm:max-w-100">
         <form action={handleSubmit}>
           <DialogHeader>
             <DialogTitle>Edit Attendance</DialogTitle>
