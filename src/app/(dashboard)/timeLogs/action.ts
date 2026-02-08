@@ -11,11 +11,16 @@ export async function updateTimeLogAction(id: string, formData: FormData) {
   const clockOutDate = formData.get("clock_out_date") as string;
   const clockOutTime = formData.get("clock_out_time") as string;
 
-  const clock_in_time = clockInDate && clockInTime ? `${clockInDate}T${clockInTime}` : null;
-  const clock_out_time = clockOutDate && clockOutTime ? `${clockOutDate}T${clockOutTime}` : null;
+ 
+  const clock_in_time = clockInDate && clockInTime ? `${clockInDate}T${clockInTime}Z` : null;
+  const clock_out_time = clockOutDate && clockOutTime ? `${clockOutDate}T${clockOutTime}Z` : null;
 
   if (!clock_in_time) {
     return { success: false, message: "Clock-in time is required." };
+  }
+
+  if (clock_out_time && new Date(clock_out_time) < new Date(clock_in_time)) {
+    return { success: false, message: "Clock-out cannot be earlier than Clock-in." };
   }
 
   const { error } = await supabase

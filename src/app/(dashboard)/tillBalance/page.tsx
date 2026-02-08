@@ -24,25 +24,20 @@ export default async function TillPage({
 
   if (!activeShopId) return <div>Please select a shop.</div>;
 
-  // Default to the first day of the current month up to today
-  const today = new Date();
-  const firstOfDate = new Date(today.getFullYear(), today.getMonth(), 1)
-    .toISOString()
-    .split("T")[0];
-  const endOfDate = today.toISOString().split("T")[0];
+  const todayStr = new Date().toISOString().split("T")[0];
+
+  const startDate = from || todayStr;
+  const endDate = to || todayStr;
 
   const query = supabase
     .from("till_balance")
     .select("*")
     .eq("shop_id", activeShopId)
-    .order("balance_date", { ascending: false });
-
-  // Use provided searchParams or fall back to the default monthly range
-  query.gte("balance_date", from || firstOfDate);
-  query.lte("balance_date", to || endOfDate);
+    .order("balance_date", { ascending: false })
+    .gte("balance_date", startDate)
+    .lte("balance_date", endDate);
 
   const { data: balances } = await query;
-
   return (
     <div className="p-6 space-y-6 flex flex-col gap-4 max-w-7xl mx-auto md:p-16">
       <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center">
@@ -54,7 +49,7 @@ export default async function TillPage({
             Search and correct daily balances synced from the till.
           </p>
         </div>
-        <div className="w-full sm:w-auto">
+        <div className="w-full sm:w-auto flex items-center gap-2">
           <DateRangePicker />
         </div>
       </div>

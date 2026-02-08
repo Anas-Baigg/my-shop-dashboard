@@ -20,15 +20,18 @@ export default async function TimeLogsPage({
   const cookieStore = await cookies();
   const activeShopId = cookieStore.get("last_shop_id")?.value;
   const supabase = await createClient();
+  const today = new Date().toISOString().split("T")[0];
+
+  const startDate = from || today;
+  const endDate = to || today;
 
   let query = supabase
     .from("time_logs")
     .select(`*, employee(name)`)
     .eq("shop_id", activeShopId)
     .order("clock_in_time", { ascending: false });
-
-  if (from) query = query.gte("clock_in_time", from);
-  if (to) query = query.lte("clock_in_time", `${to}T23:59:59`);
+  query = query.gte("clock_in_time", `${startDate}T00:00:00+00`);
+  query = query.lte("clock_in_time", `${endDate}T23:59:59+00`);
 
   const { data: logs } = await query;
 

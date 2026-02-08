@@ -6,7 +6,6 @@ import { Calendar as CalendarIcon } from "lucide-react";
 import { DateRange } from "react-day-picker";
 import { useRouter, useSearchParams } from "next/navigation";
 
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -14,7 +13,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Field, FieldLabel } from "../ui/field";
 
 export function DateRangePicker() {
   const router = useRouter();
