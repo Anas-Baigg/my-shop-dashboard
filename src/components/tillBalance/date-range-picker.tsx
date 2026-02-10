@@ -18,64 +18,45 @@ export function DateRangePicker() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Initialize state from URL or default to undefined
-  const [date, setDate] = React.useState<DateRange | undefined>({
-    from: searchParams.get("from")
-      ? new Date(searchParams.get("from")!)
-      : undefined,
-    to: searchParams.get("to") ? new Date(searchParams.get("to")!) : undefined,
-  });
+  const from = searchParams.get("from");
+  const to = searchParams.get("to");
 
-  // date-range-picker.tsx
+  const selected: DateRange | undefined =
+    from && to ? { from: new Date(from), to: new Date(to) } : undefined;
 
-  React.useEffect(() => {
-    const currentFrom = searchParams.get("from");
-    const currentTo = searchParams.get("to");
+  const onSelect = (range?: DateRange) => {
+    if (!range?.from || !range?.to) return;
 
-    if (date?.from && date?.to) {
-      const newFrom = format(date.from, "yyyy-MM-dd");
-      const newTo = format(date.to, "yyyy-MM-dd");
+    const params = new URLSearchParams(searchParams);
+    params.set("from", format(range.from, "yyyy-MM-dd"));
+    params.set("to", format(range.to, "yyyy-MM-dd"));
 
-      // ONLY push if the date has actually changed compared to the URL
-      if (newFrom !== currentFrom || newTo !== currentTo) {
-        const params = new URLSearchParams(searchParams.toString());
-        params.set("from", newFrom);
-        params.set("to", newTo);
-        router.push(`?${params.toString()}`);
-      }
-    }
-  }, [date, router, searchParams]);
+    router.push(`?${params.toString()}`);
+  };
 
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button
-          id="date"
-          variant={"default"}
-          className="justify-start px-2.5 font-normal"
-        >
-          <CalendarIcon />
-          {date?.from ? (
-            date.to ? (
+        <Button className="h-9 px-2.5 flex items-center gap-2 justify-center sm:justify-end w-fit">
+          <CalendarIcon className="h-4 w-4 shrink-0" />
+
+          <span className="hidden sm:inline text-sm whitespace-nowrap">
+            {selected?.from ? (
               <>
-                {format(date.from, "LLL dd, y")} -{" "}
-                {format(date.to, "LLL dd, y")}
+                {format(selected.from, "LLL dd, y")} –{" "}
+                {format(selected.to!, "LLL dd, y")}
               </>
             ) : (
-              format(date.from, "LLL dd, y")
-            )
-          ) : (
-            <span>Pick a date range</span>
-          )}
+              "Pick a date range"
+            )}
+          </span>
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="end">
         <Calendar
-          initialFocus
           mode="range"
-          defaultMonth={date?.from}
-          selected={date}
-          onSelect={setDate}
+          selected={selected}
+          onSelect={onSelect}
           numberOfMonths={2}
         />
       </PopoverContent>

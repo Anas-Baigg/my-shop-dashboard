@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/table";
 import { DateRangePicker } from "@/components/tillBalance/date-range-picker";
 import { TimeLogDialog } from "@/components/timeLogs/TimeLogDialog";
+import { TableControls } from "@/components/TableControl";
 
 export default async function TimeLogsPage({
   searchParams,
@@ -41,7 +42,9 @@ export default async function TimeLogsPage({
         <h2 className="text-2xl md:text-3xl font-bold tracking-tight">
           Attendance Logs
         </h2>
-        <div className="w-full sm:w-auto">
+
+        <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
+          <TableControls />
           <DateRangePicker />
         </div>
       </div>
@@ -57,24 +60,32 @@ export default async function TimeLogsPage({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {logs?.map((log) => (
-              <TableRow key={log.id}>
-                <TableCell className="font-medium">
-                  {log.employee?.name}
-                </TableCell>
-                <TableCell>
-                  {new Date(log.clock_in_time).toLocaleString()}
-                </TableCell>
-                <TableCell>
-                  {log.clock_out_time
-                    ? new Date(log.clock_out_time).toLocaleString()
-                    : "Still Clocked In"}
-                </TableCell>
-                <TableCell className="text-right">
-                  <TimeLogDialog record={log} />
+            {logs?.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={4} className="h-24 text-center">
+                  No records found for this {startDate} date.
                 </TableCell>
               </TableRow>
-            ))}
+            ) : (
+              logs?.map((log) => (
+                <TableRow key={log.id}>
+                  <TableCell className="font-medium">
+                    {log.employee?.name}
+                  </TableCell>
+                  <TableCell>
+                    {new Date(log.clock_in_time).toLocaleString()}
+                  </TableCell>
+                  <TableCell>
+                    {log.clock_out_time
+                      ? new Date(log.clock_out_time).toLocaleString()
+                      : "Still Clocked In"}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <TimeLogDialog record={log} />
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
       </div>

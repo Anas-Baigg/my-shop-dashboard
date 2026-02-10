@@ -11,6 +11,7 @@ import {
 
 import { TillBalanceDialog } from "@/components/tillBalance/TillBalanceDialog";
 import { DateRangePicker } from "@/components/tillBalance/date-range-picker";
+import { TableControls } from "@/components/TableControl";
 
 export default async function TillPage({
   searchParams,
@@ -49,7 +50,8 @@ export default async function TillPage({
             Search and correct daily balances synced from the till.
           </p>
         </div>
-        <div className="w-full sm:w-auto flex items-center gap-2">
+        <div className="flex flex-row sm:flex-row gap-2 sm:items-center justify-end">
+          <TableControls />
           <DateRangePicker />
         </div>
       </div>
@@ -70,7 +72,7 @@ export default async function TillPage({
             {balances?.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={4} className="h-24 text-center">
-                  No records found for this period.
+                  No records found for this period {startDate} date.
                 </TableCell>
               </TableRow>
             ) : (
