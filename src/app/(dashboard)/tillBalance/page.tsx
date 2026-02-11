@@ -12,6 +12,7 @@ import {
 import { TillBalanceDialog } from "@/components/tillBalance/TillBalanceDialog";
 import { DateRangePicker } from "@/components/tillBalance/date-range-picker";
 import { TableControls } from "@/components/TableControl";
+import NoShopDiv from "@/components/no-shop-div";
 
 export default async function TillPage({
   searchParams,
@@ -23,7 +24,9 @@ export default async function TillPage({
   const activeShopId = urlId || cookieStore.get("last_shop_id")?.value;
   const supabase = await createClient();
 
-  if (!activeShopId) return <div>Please select a shop.</div>;
+  if (!activeShopId) {
+    return NoShopDiv("till balance");
+  }
 
   const todayStr = new Date().toISOString().split("T")[0];
 

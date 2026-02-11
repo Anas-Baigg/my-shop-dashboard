@@ -11,6 +11,7 @@ import {
 import { DateRangePicker } from "@/components/tillBalance/date-range-picker";
 import { TimeLogDialog } from "@/components/timeLogs/TimeLogDialog";
 import { TableControls } from "@/components/TableControl";
+import NoShopDiv from "@/components/no-shop-div";
 
 export default async function TimeLogsPage({
   searchParams,
@@ -19,8 +20,12 @@ export default async function TimeLogsPage({
 }) {
   const { from, to } = await searchParams;
   const cookieStore = await cookies();
-  const activeShopId = cookieStore.get("last_shop_id")?.value;
   const supabase = await createClient();
+  const activeShopId = cookieStore.get("last_shop_id")?.value;
+  if (!activeShopId) {
+    return NoShopDiv("time logs");
+  }
+
   const today = new Date().toISOString().split("T")[0];
 
   const startDate = from || today;
@@ -43,7 +48,7 @@ export default async function TimeLogsPage({
           Attendance Logs
         </h2>
 
-        <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
+        <div className="flex flex-row sm:flex-row gap-2 sm:items-center justify-end">
           <TableControls />
           <DateRangePicker />
         </div>
@@ -72,6 +77,7 @@ export default async function TimeLogsPage({
                   <TableCell className="font-medium">
                     {log.employee?.name}
                   </TableCell>
+
                   <TableCell>
                     {new Date(log.clock_in_time).toLocaleString()}
                   </TableCell>

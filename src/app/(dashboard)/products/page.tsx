@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/table";
 import { DeleteServiceConfirm } from "@/components/service/DeleteServiceConfirm";
 import { ServiceDialog } from "@/components/service/ServiceDialog";
+import NoShopDiv from "@/components/no-shop-div";
 
 export default async function ProductsPage({
   searchParams,
@@ -30,14 +31,7 @@ export default async function ProductsPage({
   const supabase = await createClient();
 
   if (!activeShopId) {
-    return (
-      <div className="p-24 text-center">
-        <h2 className="text-xl font-semibold">No Shop Selected</h2>
-        <p className="text-muted-foreground">
-          Please select a shop from the header to view products.
-        </p>
-      </div>
-    );
+    return NoShopDiv("products");
   }
 
   const { data: products } = await supabase

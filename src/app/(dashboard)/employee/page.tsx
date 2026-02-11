@@ -12,6 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import NoShopDiv from "@/components/no-shop-div";
 
 // --- MAIN PAGE COMPONENT ---
 
@@ -31,14 +32,7 @@ export default async function EmployeesPage({
   const activeShopId = urlId || cookieId;
   const supabase = await createClient();
   if (!activeShopId) {
-    return (
-      <div className="p-24 text-center">
-        <h2 className="text-xl font-semibold">No Shop Selected</h2>
-        <p className="text-muted-foreground">
-          Please select a shop from the header to view employees.
-        </p>
-      </div>
-    );
+    return NoShopDiv("employee");
   }
   const { data: employees } = await supabase
     .from("employee")

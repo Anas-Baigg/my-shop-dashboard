@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/table";
 import { DeleteServiceConfirm } from "@/components/service/DeleteServiceConfirm";
 import { ServiceDialog } from "@/components/service/ServiceDialog";
+import NoShopDiv from "@/components/no-shop-div";
 
 export default async function CutsPage({
   searchParams,
@@ -26,14 +27,7 @@ export default async function CutsPage({
   const supabase = await createClient();
 
   if (!activeShopId) {
-    return (
-      <div className="p-24 text-center">
-        <h2 className="text-xl font-semibold">No Shop Selected</h2>
-        <p className="text-muted-foreground">
-          Please select a shop from the header to view cuts.
-        </p>
-      </div>
-    );
+    return NoShopDiv("cuts");
   }
 
   const { data: cuts } = await supabase
