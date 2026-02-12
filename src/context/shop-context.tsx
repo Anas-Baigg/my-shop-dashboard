@@ -6,8 +6,6 @@ type Shop = { id: string; name: string };
 
 type ShopContextType = {
   shops: Shop[];
-  currentShopId: string | null;
-  setCurrentShopId: (id: string) => void;
   loading: boolean;
 };
 
@@ -21,46 +19,35 @@ export function ShopProvider({
   children: React.ReactNode;
 }) {
   const supabase = createClient();
-
   const [shops, setShops] = useState<Shop[]>([]);
-  const [currentShopId, setCurrentShopId] = useState<string | null>(null);
-  const [loading, setloading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function loadingShops() {
-      setloading(true);
-
+    async function fetchShops() {
+      setLoading(true);
       const { data, error } = await supabase
         .from("shops")
-        .select("id,name")
+        .select("id, name")
         .eq("owner_id", userId);
+
       if (!error && data) {
         setShops(data);
-        if (!currentShopId && data.length > 0) {
-          setCurrentShopId(data[0].id);
-        }
       }
-      setloading(false);
+      setLoading(false);
     }
-    loadingShops();
-  }, [userId]);
+
+    if (userId) fetchShops();
+  }, [userId, supabase]);
+
   return (
-    <ShopContext.Provider
-      value={{
-        shops,
-        currentShopId,
-        setCurrentShopId,
-        loading,
-      }}
-    >
+    <ShopContext.Provider value={{ shops, loading }}>
       {children}
     </ShopContext.Provider>
   );
 }
+
 export function useShop() {
   const context = useContext(ShopContext);
-  if (!context) {
-    throw new Error("useShop must be used within ShopProvider");
-  }
+  if (!context) throw new Error("useShop must be used within ShopProvider");
   return context;
 }

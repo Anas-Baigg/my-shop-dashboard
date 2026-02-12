@@ -25,40 +25,31 @@ export default function Header() {
   const { setTheme } = useTheme();
   const supabase = createClient();
 
-  const { shops, currentShopId, setCurrentShopId } = useShop();
-
+  const { shops } = useShop();
+  const currentShopId = searchParams.get("shopId");
   useEffect(() => {
     if (!shops || shops.length === 0) return;
 
-    //Check URL first
-    const urlId = searchParams.get("shopId");
+    //Check the Cookie if URL is empty
+    const cookieValue = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("last_shop_id="))
+      ?.split("=")[1];
 
-    //Check cookie
-    const cookieValue =
-      typeof document !== "undefined"
-        ? document.cookie
-            .split("; ")
-            .find((row) => row.startsWith("last_shop_id="))
-            ?.split("=")[1]
-        : undefined;
+    //Priority: URL > Cookie > First Shop in list
+    const activeId = currentShopId || cookieValue || shops[0]?.id;
 
-    //first shop in the list
-    const firstShopId = shops[0]?.id;
-
-    const activeId = urlId || cookieValue || firstShopId;
-
-    if (activeId && activeId !== currentShopId) {
-      setCurrentShopId(activeId);
-
-      // Update cookie
-      document.cookie = `last_shop_id=${activeId}; path=/; max-age=31536000; SameSite=Lax`;
-
-      // Update URL
+    //If the URL is missing the ID, or is different, update it
+    if (currentShopId !== activeId) {
       const params = new URLSearchParams(searchParams.toString());
       params.set("shopId", activeId);
+
+      // Update cookie so the choice is remembered
+      document.cookie = `last_shop_id=${activeId}; path=/; max-age=31536000; SameSite=Lax`;
+
       router.replace(`${pathname}?${params.toString()}`);
     }
-  }, [searchParams, currentShopId, setCurrentShopId, shops, router, pathname]);
+  }, [shops, currentShopId, searchParams, pathname, router]);
 
   // Find the selected shop object to show the correct name in the button
   // If no ID is found yet, it defaults to the first shop in the list
@@ -69,9 +60,6 @@ export default function Header() {
     document.cookie = `last_shop_id=${id}; path=/; max-age=31536000; SameSite=Lax`;
 
     // 2. Update the Context State
-    setCurrentShopId(id);
-
-    // 3. Update the URL so the current page refreshes with the new data
     const params = new URLSearchParams(searchParams.toString());
     params.set("shopId", id);
     router.push(`${pathname}?${params.toString()}`);
