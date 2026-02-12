@@ -4,6 +4,7 @@ export interface Employee {
 
 export interface TransactionItem{
     id: string;
+    item_type: string;
     item_name: string;
     quantity: number;
     unit_price: number;

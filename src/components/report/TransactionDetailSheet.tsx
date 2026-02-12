@@ -45,7 +45,7 @@ export function TransactionDetailSheet({
         <SheetHeader>
           <SheetTitle>Transaction Details</SheetTitle>
           <div className="text-sm text-muted-foreground">
-            ID: {transaction?.id.slice(0, 8)}...
+            ID: {transaction?.id}
           </div>
         </SheetHeader>
 
