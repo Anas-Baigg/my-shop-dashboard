@@ -1,4 +1,4 @@
-export default function NoShopDiv(pageName: string) {
+export default function NoShopDiv({ pageName }: { pageName: string }) {
   return (
     <div className="p-24 text-center">
       <h2 className="text-xl font-semibold">No Shop Selected</h2>

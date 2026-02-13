@@ -20,7 +20,6 @@ async function login(prevState: any, formData: FormData) {
   if (error) {
     return { ok: false, message: error.message }
   }
-
   // Success!
   revalidatePath('/', 'layout')
   redirect('/dashboard')

@@ -13,6 +13,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import NoShopDiv from "@/components/no-shop-div";
+import { redirect } from "next/navigation";
 
 // --- MAIN PAGE COMPONENT ---
 
@@ -27,12 +28,14 @@ export default async function EmployeesPage({
   // Read the cookie from the browser's request
   const cookieStore = await cookies();
   const cookieId = cookieStore.get("last_shop_id")?.value;
-
+  if (!urlId && cookieId) {
+    redirect(`/employee?shopId=${cookieId}`);
+  }
   // Final Decision: URL takes priority, then Cookie
   const activeShopId = urlId || cookieId;
   const supabase = await createClient();
   if (!activeShopId) {
-    return NoShopDiv("employee");
+    return <NoShopDiv pageName="Employee" />;
   }
   const { data: employees } = await supabase
     .from("employee")

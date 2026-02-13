@@ -13,6 +13,7 @@ import { TillBalanceDialog } from "@/components/tillBalance/TillBalanceDialog";
 import { DateRangePicker } from "@/components/tillBalance/date-range-picker";
 import { TableControls } from "@/components/TableControl";
 import NoShopDiv from "@/components/no-shop-div";
+import { redirect } from "next/navigation";
 
 export default async function TillPage({
   searchParams,
@@ -21,11 +22,15 @@ export default async function TillPage({
 }) {
   const { shopId: urlId, from, to } = await searchParams;
   const cookieStore = await cookies();
+  const cookieId = cookieStore.get("last_shop_id")?.value;
+  if (!urlId && cookieId) {
+    redirect(`/tillBalance?shopId=${cookieId}`);
+  }
   const activeShopId = urlId || cookieStore.get("last_shop_id")?.value;
   const supabase = await createClient();
 
   if (!activeShopId) {
-    return NoShopDiv("till balance");
+    return <NoShopDiv pageName="Till Balance" />;
   }
 
   const todayStr = new Date().toISOString().split("T")[0];

@@ -12,18 +12,23 @@ import { DateRangePicker } from "@/components/tillBalance/date-range-picker";
 import { TimeLogDialog } from "@/components/timeLogs/TimeLogDialog";
 import { TableControls } from "@/components/TableControl";
 import NoShopDiv from "@/components/no-shop-div";
+import { redirect } from "next/navigation";
 
 export default async function TimeLogsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ from?: string; to?: string }>;
+  searchParams: Promise<{ from?: string; to?: string; shopId?: string }>;
 }) {
-  const { from, to } = await searchParams;
+  const { from, to, shopId: urlId } = await searchParams;
   const cookieStore = await cookies();
+  const cookieId = cookieStore.get("last_shop_id")?.value;
+  if (!urlId && cookieId) {
+    redirect(`/timeLogs?shopId=${cookieId}`);
+  }
   const supabase = await createClient();
   const activeShopId = cookieStore.get("last_shop_id")?.value;
   if (!activeShopId) {
-    return NoShopDiv("time logs");
+    return <NoShopDiv pageName="time logs" />;
   }
 
   const today = new Date().toISOString().split("T")[0];

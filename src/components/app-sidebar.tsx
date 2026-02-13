@@ -1,5 +1,6 @@
 "use client";
-
+import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 import {
   PersonStanding,
   ReceiptText,
@@ -20,6 +21,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import Link from "next/link";
 
 const items = [
   {
@@ -60,6 +62,13 @@ const items = [
 ];
 
 export function AppSidebar() {
+  const searchParams = useSearchParams();
+  const currentShopId = searchParams.get("shopId");
+
+  if (!currentShopId) return null;
+
+  const params = new URLSearchParams(searchParams.toString());
+  params.set("shopId", currentShopId);
   return (
     <Sidebar>
       <SidebarContent>
@@ -70,10 +79,13 @@ export function AppSidebar() {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url} className="flex items-center gap-2">
+                    <Link
+                      href={`${item.url}?${params.toString()}`}
+                      className="flex items-center gap-2"
+                    >
                       <item.icon className="h-4 w-4" />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

@@ -96,14 +96,14 @@ export function TimeLogDialog({ record }: { record: any }) {
                     />
                   </PopoverContent>
                 </Popover>
+              </div>
+
+              <div className="flex flex-col gap-3 sm:w-30">
                 <input
                   type="hidden"
                   name="clock_in_date"
                   value={dateIn ? format(dateIn, "yyyy-MM-dd") : ""}
                 />
-              </div>
-
-              <div className="flex flex-col gap-3 sm:w-30">
                 <Label className="px-1 text-muted-foreground">Time</Label>
                 <Input
                   name="clock_in_time"
@@ -143,14 +143,14 @@ export function TimeLogDialog({ record }: { record: any }) {
                     />
                   </PopoverContent>
                 </Popover>
+              </div>
+
+              <div className="flex flex-col gap-3 sm:w-30">
                 <input
                   type="hidden"
                   name="clock_out_date"
                   value={dateOut ? format(dateOut, "yyyy-MM-dd") : ""}
                 />
-              </div>
-
-              <div className="flex flex-col gap-3 sm:w-30">
                 <Label className="px-1 text-muted-foreground">Time</Label>
                 <Input
                   name="clock_out_time"

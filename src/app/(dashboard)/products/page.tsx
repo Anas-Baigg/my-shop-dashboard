@@ -16,6 +16,7 @@ import {
 import { DeleteServiceConfirm } from "@/components/service/DeleteServiceConfirm";
 import { ServiceDialog } from "@/components/service/ServiceDialog";
 import NoShopDiv from "@/components/no-shop-div";
+import { redirect } from "next/navigation";
 
 export default async function ProductsPage({
   searchParams,
@@ -26,12 +27,14 @@ export default async function ProductsPage({
 
   const cookieStore = await cookies();
   const cookieId = cookieStore.get("last_shop_id")?.value;
-
+  if (!urlId && cookieId) {
+    redirect(`/products?shopId=${cookieId}`);
+  }
   const activeShopId = urlId || cookieId;
   const supabase = await createClient();
 
   if (!activeShopId) {
-    return NoShopDiv("products");
+    return <NoShopDiv pageName="cuts" />;
   }
 
   const { data: products } = await supabase

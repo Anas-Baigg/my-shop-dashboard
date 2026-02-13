@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { createCutAction, deleteCutAction, updateCutAction } from "./action";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import {
   Table,
   TableBody,
@@ -23,11 +24,15 @@ export default async function CutsPage({
   const cookieStore = await cookies();
   const cookieId = cookieStore.get("last_shop_id")?.value;
 
+  if (!urlId && cookieId) {
+    redirect(`/cuts?shopId=${cookieId}`);
+  }
+
   const activeShopId = urlId || cookieId;
   const supabase = await createClient();
 
   if (!activeShopId) {
-    return NoShopDiv("cuts");
+    return <NoShopDiv pageName="cuts" />;
   }
 
   const { data: cuts } = await supabase

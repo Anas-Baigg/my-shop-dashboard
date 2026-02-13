@@ -90,9 +90,11 @@ export default async function ReportsPage({
   const { from, to, tx_page, daily_page } = await searchParams;
   const supabase = await createClient();
   const cookieStore = await cookies();
+
   const activeShopId = cookieStore.get("last_shop_id")?.value;
+
   if (!activeShopId) {
-    return NoShopDiv("Reports");
+    return <NoShopDiv pageName="Reports" />;
   }
 
   // Defaults
