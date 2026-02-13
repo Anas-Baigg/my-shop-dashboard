@@ -1,8 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import * as React from "react";
 import { format } from "date-fns";
 import { ChevronDownIcon, Pencil } from "lucide-react";
+import { toast } from "sonner";
+
+import { updateTimeLogAction } from "@/app/(dashboard)/timeLogs/action";
 import { cn } from "@/lib/utils";
 
 import {
@@ -16,35 +19,43 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Calendar } from "@/components/ui/calendar";
-import { Label } from "@/components/ui/label";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { toast } from "sonner";
-import { updateTimeLogAction } from "@/app/(dashboard)/timeLogs/action";
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 
-export function TimeLogDialog({ record }: { record: any }) {
-  const [open, setOpen] = useState(false);
-  const [openIn, setOpenIn] = useState(false);
-  const [openOut, setOpenOut] = useState(false);
+interface TimeLogDialogProps {
+  record: any;
+}
 
-  // Initialize dates from record
-  const [dateIn, setDateIn] = useState<Date | undefined>(
+export function TimeLogDialog({ record }: TimeLogDialogProps) {
+  const [open, setOpen] = React.useState(false);
+
+  // Clock-in state
+  const [openIn, setOpenIn] = React.useState(false);
+  const [dateIn, setDateIn] = React.useState<Date | undefined>(
     record.clock_in_time ? new Date(record.clock_in_time) : undefined,
   );
-  const [dateOut, setDateOut] = useState<Date | undefined>(
+
+  // Clock-out state
+  const [openOut, setOpenOut] = React.useState(false);
+  const [dateOut, setDateOut] = React.useState<Date | undefined>(
     record.clock_out_time ? new Date(record.clock_out_time) : undefined,
   );
 
-  // Extract time string (HH:mm:ss)
+  // Format time string for input
   const formatTime = (ts: string | null) => {
     if (!ts) return "09:00:00";
     return new Date(ts).toTimeString().slice(0, 8);
   };
 
-  async function handleSubmit(formData: FormData) {
+  // Handle form submit
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+
     const result = await updateTimeLogAction(record.id, formData);
     if (result.success) {
       toast.success(result.message);
@@ -53,6 +64,7 @@ export function TimeLogDialog({ record }: { record: any }) {
       toast.error(result.message);
     }
   }
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -60,36 +72,35 @@ export function TimeLogDialog({ record }: { record: any }) {
           <Pencil className="h-4 w-4" />
         </Button>
       </DialogTrigger>
-      {/* Changed: Use w-[95vw] for mobile and sm:max-w-[450px] for desktop */}
+
       <DialogContent className="w-[95vw] max-w-lg rounded-lg sm:w-full">
-        <form action={handleSubmit}>
+        <form onSubmit={handleSubmit}>
           <DialogHeader>
             <DialogTitle>Edit Attendance</DialogTitle>
           </DialogHeader>
 
           <div className="flex flex-col gap-6 py-6">
             {/* CLOCK IN */}
-            <div className="grid grid-cols-12 gap-3 items-end">
-              <div className="col-span-8 flex flex-col gap-2 min-w-0">
-                <Label className="px-1 text-xs font-medium text-muted-foreground">
-                  Clock In Date
-                </Label>
+            <FieldGroup className="flex flex-col gap-4 sm:flex-row">
+              <Field>
+                <FieldLabel htmlFor="clock-in-date">Clock In Date</FieldLabel>
                 <Popover open={openIn} onOpenChange={setOpenIn}>
                   <PopoverTrigger asChild>
                     <Button
+                      id="clock-in-date"
                       variant="outline"
-                      className="w-full justify-between text-left font-normal px-3"
+                      className="w-40 justify-between font-normal"
                     >
-                      <span className="truncate">
-                        {dateIn ? format(dateIn, "dd MMM yyyy") : "Pick a date"}
-                      </span>
-                      <ChevronDownIcon className="h-4 w-4 opacity-50 shrink-0" />
+                      {dateIn ? format(dateIn, "PPP") : "Select date"}
+                      <ChevronDownIcon className="h-4 w-4 opacity-50" />
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0" align="start">
                     <Calendar
                       mode="single"
                       selected={dateIn}
+                      captionLayout="dropdown"
+                      defaultMonth={dateIn}
                       onSelect={(date) => {
                         setDateIn(date);
                         setOpenIn(false);
@@ -97,80 +108,76 @@ export function TimeLogDialog({ record }: { record: any }) {
                     />
                   </PopoverContent>
                 </Popover>
-              </div>
-
-              <div className="col-span-4 flex flex-col gap-2 min-w-0">
                 <input
                   type="hidden"
                   name="clock_in_date"
                   value={dateIn ? format(dateIn, "yyyy-MM-dd") : ""}
                 />
-                <Label className="px-1 text-xs font-medium text-muted-foreground">
-                  Time
-                </Label>
+              </Field>
+
+              <Field>
+                <FieldLabel htmlFor="clock-in-time">Time</FieldLabel>
                 <Input
-                  name="clock_in_time"
                   type="time"
+                  id="clock-in-time"
+                  name="clock_in_time"
                   step="1"
                   defaultValue={formatTime(record.clock_in_time)}
-                  className="bg-background w-full px-2"
+                  className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
                 />
-              </div>
-            </div>
+              </Field>
+            </FieldGroup>
 
             {/* CLOCK OUT */}
-            <div className="grid grid-cols-12 gap-3 items-end">
-              <div className="col-span-8 flex flex-col gap-2 min-w-0">
-                <Label className="px-1 text-xs font-medium text-muted-foreground">
-                  Clock Out Date
-                </Label>
+            <FieldGroup className="flex flex-col gap-4 sm:flex-row">
+              <Field>
+                <FieldLabel htmlFor="clock-out-date">Clock Out Date</FieldLabel>
                 <Popover open={openOut} onOpenChange={setOpenOut}>
                   <PopoverTrigger asChild>
                     <Button
+                      id="clock-out-date"
                       variant="outline"
-                      className="w-full justify-between text-left font-normal px-3"
+                      className="w-40 justify-between font-normal"
                     >
-                      <span className="truncate">
-                        {dateOut
-                          ? format(dateOut, "dd MMM yyyy")
-                          : "Pick a date"}
-                      </span>
-                      <ChevronDownIcon className="h-4 w-4 opacity-50 shrink-0" />
+                      {dateOut ? format(dateOut, "PPP") : "Select date"}
+                      <ChevronDownIcon className="h-4 w-4 opacity-50" />
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0" align="start">
                     <Calendar
                       mode="single"
                       selected={dateOut}
+                      captionLayout="dropdown"
+                      defaultMonth={dateOut}
                       onSelect={(date) => {
                         setDateOut(date);
                         setOpenOut(false);
                       }}
-                      disabled={dateIn && { before: dateIn }}
+                      disabled={dateIn ? { before: dateIn } : undefined}
                     />
                   </PopoverContent>
                 </Popover>
-              </div>
-
-              <div className="col-span-4 flex flex-col gap-2 min-w-0">
                 <input
                   type="hidden"
                   name="clock_out_date"
                   value={dateOut ? format(dateOut, "yyyy-MM-dd") : ""}
                 />
-                <Label className="px-1 text-xs font-medium text-muted-foreground">
-                  Time
-                </Label>
+              </Field>
+
+              <Field>
+                <FieldLabel htmlFor="clock-out-time">Time</FieldLabel>
                 <Input
-                  name="clock_out_time"
                   type="time"
+                  id="clock-out-time"
+                  name="clock_out_time"
                   step="1"
                   defaultValue={formatTime(record.clock_out_time)}
-                  className="bg-background w-full px-2"
+                  className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
                 />
-              </div>
-            </div>
+              </Field>
+            </FieldGroup>
           </div>
+
           <DialogFooter>
             <Button type="submit" className="w-full">
               Save Changes
