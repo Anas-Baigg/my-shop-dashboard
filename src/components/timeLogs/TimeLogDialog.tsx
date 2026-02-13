@@ -70,8 +70,8 @@ export function TimeLogDialog({ record }: { record: any }) {
           <div className="flex flex-col gap-6 py-6">
             {/* CLOCK IN*/}
 
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-end">
-              <div className="flex flex-1 flex-col gap-3">
+            <div className="grid grid-cols-12 gap-4 items-end">
+              <div className="col-span-7 flex flex-col gap-3">
                 <Label className="px-1 text-muted-foreground">
                   Clock In Date
                 </Label>
@@ -98,7 +98,7 @@ export function TimeLogDialog({ record }: { record: any }) {
                 </Popover>
               </div>
 
-              <div className="flex flex-col gap-3 sm:w-30">
+              <div className="col-span-5 flex flex-col gap-3">
                 <input
                   type="hidden"
                   name="clock_in_date"
@@ -110,14 +110,14 @@ export function TimeLogDialog({ record }: { record: any }) {
                   type="time"
                   step="1"
                   defaultValue={formatTime(record.clock_in_time)}
-                  className="bg-background"
+                  className="bg-background w-full"
                 />
               </div>
             </div>
 
             {/* CLOCK OUT */}
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-end">
-              <div className="flex flex-1 flex-col gap-3">
+            <div className="grid grid-cols-12 gap-4 items-end">
+              <div className="col-span-7 flex flex-col gap-3">
                 <Label className="px-1 text-muted-foreground">
                   Clock Out Date
                 </Label>
@@ -145,7 +145,7 @@ export function TimeLogDialog({ record }: { record: any }) {
                 </Popover>
               </div>
 
-              <div className="flex flex-col gap-3 sm:w-30">
+              <div className="col-span-5 flex flex-col gap-3">
                 <input
                   type="hidden"
                   name="clock_out_date"
