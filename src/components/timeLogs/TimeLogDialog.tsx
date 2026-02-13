@@ -146,11 +146,11 @@ export function TimeLogDialog({ record }: { record: any }) {
               </div>
 
               <div className="col-span-5 flex flex-col gap-3">
-                <input
+                {/* <input
                   type="hidden"
                   name="clock_out_date"
                   value={dateOut ? format(dateOut, "yyyy-MM-dd") : ""}
-                />
+                /> */}
                 <Label className="px-1 text-muted-foreground">Time</Label>
                 <Input
                   name="clock_out_time"
