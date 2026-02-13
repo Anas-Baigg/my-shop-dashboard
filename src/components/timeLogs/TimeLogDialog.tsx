@@ -68,21 +68,22 @@ export function TimeLogDialog({ record }: { record: any }) {
           </DialogHeader>
 
           <div className="flex flex-col gap-6 py-6">
-            {/* CLOCK IN*/}
-
-            <div className="grid grid-cols-12 gap-4 items-end">
-              <div className="col-span-7 flex flex-col gap-3">
-                <Label className="px-1 text-muted-foreground">
+            {/* CLOCK IN */}
+            <div className="grid grid-cols-12 gap-3 items-end">
+              <div className="col-span-8 flex flex-col gap-2 min-w-0">
+                <Label className="px-1 text-xs font-medium text-muted-foreground">
                   Clock In Date
                 </Label>
                 <Popover open={openIn} onOpenChange={setOpenIn}>
                   <PopoverTrigger asChild>
                     <Button
                       variant="outline"
-                      className="w-full justify-between text-left font-normal"
+                      className="w-full justify-between text-left font-normal px-3"
                     >
-                      {dateIn ? format(dateIn, "dd MMM yyyy") : "Pick a date"}
-                      <ChevronDownIcon className="h-4 w-4 opacity-50" />
+                      <span className="truncate">
+                        {dateIn ? format(dateIn, "dd MMM yyyy") : "Pick a date"}
+                      </span>
+                      <ChevronDownIcon className="h-4 w-4 opacity-50 shrink-0" />
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0" align="start">
@@ -98,37 +99,43 @@ export function TimeLogDialog({ record }: { record: any }) {
                 </Popover>
               </div>
 
-              <div className="col-span-5 flex flex-col gap-3">
+              <div className="col-span-4 flex flex-col gap-2 min-w-0">
                 <input
                   type="hidden"
                   name="clock_in_date"
                   value={dateIn ? format(dateIn, "yyyy-MM-dd") : ""}
                 />
-                <Label className="px-1 text-muted-foreground">Time</Label>
+                <Label className="px-1 text-xs font-medium text-muted-foreground">
+                  Time
+                </Label>
                 <Input
                   name="clock_in_time"
                   type="time"
                   step="1"
                   defaultValue={formatTime(record.clock_in_time)}
-                  className="bg-background w-full"
+                  className="bg-background w-full px-2"
                 />
               </div>
             </div>
 
             {/* CLOCK OUT */}
-            <div className="grid grid-cols-12 gap-4 items-end">
-              <div className="col-span-7 flex flex-col gap-3">
-                <Label className="px-1 text-muted-foreground">
+            <div className="grid grid-cols-12 gap-3 items-end">
+              <div className="col-span-8 flex flex-col gap-2 min-w-0">
+                <Label className="px-1 text-xs font-medium text-muted-foreground">
                   Clock Out Date
                 </Label>
                 <Popover open={openOut} onOpenChange={setOpenOut}>
                   <PopoverTrigger asChild>
                     <Button
                       variant="outline"
-                      className="w-full justify-between text-left font-normal"
+                      className="w-full justify-between text-left font-normal px-3"
                     >
-                      {dateOut ? format(dateOut, "dd MMM yyyy") : "Pick a date"}
-                      <ChevronDownIcon className="h-4 w-4 opacity-50" />
+                      <span className="truncate">
+                        {dateOut
+                          ? format(dateOut, "dd MMM yyyy")
+                          : "Pick a date"}
+                      </span>
+                      <ChevronDownIcon className="h-4 w-4 opacity-50 shrink-0" />
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0" align="start">
@@ -145,24 +152,25 @@ export function TimeLogDialog({ record }: { record: any }) {
                 </Popover>
               </div>
 
-              <div className="col-span-5 flex flex-col gap-3">
-                {/* <input
+              <div className="col-span-4 flex flex-col gap-2 min-w-0">
+                <input
                   type="hidden"
                   name="clock_out_date"
                   value={dateOut ? format(dateOut, "yyyy-MM-dd") : ""}
-                /> */}
-                <Label className="px-1 text-muted-foreground">Time</Label>
+                />
+                <Label className="px-1 text-xs font-medium text-muted-foreground">
+                  Time
+                </Label>
                 <Input
                   name="clock_out_time"
                   type="time"
                   step="1"
                   defaultValue={formatTime(record.clock_out_time)}
-                  className="bg-background"
+                  className="bg-background w-full px-2"
                 />
               </div>
             </div>
           </div>
-
           <DialogFooter>
             <Button type="submit" className="w-full">
               Save Changes
