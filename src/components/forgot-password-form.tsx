@@ -15,6 +15,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
+import { validateEmail } from "@/lib/validators/emailPass";
+import { toast } from "sonner";
 
 export function ForgotPasswordForm({
   className,
@@ -27,6 +29,12 @@ export function ForgotPasswordForm({
 
   const handleForgotPassword = async (e: React.FormEvent) => {
     e.preventDefault();
+    const emailError = validateEmail(email);
+
+    if (emailError) {
+      toast.error(emailError);
+      return;
+    }
     const supabase = createClient();
     setIsLoading(true);
     setError(null);
@@ -66,7 +74,7 @@ export function ForgotPasswordForm({
             <CardTitle className="text-2xl">Reset Your Password</CardTitle>
             <CardDescription>
               Type in your email and we&apos;ll send you a link to reset your
-              password
+              password if it exist.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -76,9 +84,7 @@ export function ForgotPasswordForm({
                   <Label htmlFor="email">Email</Label>
                   <Input
                     id="email"
-                    type="email"
                     placeholder="m@example.com"
-                    required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />

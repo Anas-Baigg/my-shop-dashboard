@@ -15,6 +15,8 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { validatePassword } from "@/lib/validators/emailPass";
+import { toast } from "sonner";
 
 export function UpdatePasswordForm({
   className,
@@ -27,6 +29,11 @@ export function UpdatePasswordForm({
 
   const handleForgotPassword = async (e: React.FormEvent) => {
     e.preventDefault();
+    const passwordError = validatePassword(password, { isSignUp: true });
+    if (passwordError) {
+      toast.error(passwordError);
+      return;
+    }
     const supabase = createClient();
     setIsLoading(true);
     setError(null);

@@ -53,7 +53,6 @@ export function TimeLogDialog({ record }: { record: any }) {
       toast.error(result.message);
     }
   }
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -61,15 +60,17 @@ export function TimeLogDialog({ record }: { record: any }) {
           <Pencil className="h-4 w-4" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-100">
+      {/* Changed: Use w-[95vw] for mobile and sm:max-w-[450px] for desktop */}
+      <DialogContent className="w-[95vw] max-w-lg rounded-lg sm:w-full">
         <form action={handleSubmit}>
           <DialogHeader>
             <DialogTitle>Edit Attendance</DialogTitle>
           </DialogHeader>
 
           <div className="flex flex-col gap-6 py-6">
-            {/* --- CLOCK IN --- */}
-            <div className="flex gap-4">
+            {/* CLOCK IN*/}
+
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-end">
               <div className="flex flex-1 flex-col gap-3">
                 <Label className="px-1 text-muted-foreground">
                   Clock In Date
@@ -77,8 +78,8 @@ export function TimeLogDialog({ record }: { record: any }) {
                 <Popover open={openIn} onOpenChange={setOpenIn}>
                   <PopoverTrigger asChild>
                     <Button
-                      variant="default"
-                      className="data-[empty=true]:text-muted-foreground w-53 justify-between text-left font-normal"
+                      variant="outline"
+                      className="w-full justify-between text-left font-normal"
                     >
                       {dateIn ? format(dateIn, "dd MMM yyyy") : "Pick a date"}
                       <ChevronDownIcon className="h-4 w-4 opacity-50" />
@@ -95,7 +96,6 @@ export function TimeLogDialog({ record }: { record: any }) {
                     />
                   </PopoverContent>
                 </Popover>
-                {/* Hidden input for FormData */}
                 <input
                   type="hidden"
                   name="clock_in_date"
@@ -103,7 +103,7 @@ export function TimeLogDialog({ record }: { record: any }) {
                 />
               </div>
 
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-3 sm:w-30">
                 <Label className="px-1 text-muted-foreground">Time</Label>
                 <Input
                   name="clock_in_time"
@@ -115,8 +115,8 @@ export function TimeLogDialog({ record }: { record: any }) {
               </div>
             </div>
 
-            {/* --- CLOCK OUT --- */}
-            <div className="flex gap-4">
+            {/* CLOCK OUT */}
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-end">
               <div className="flex flex-1 flex-col gap-3">
                 <Label className="px-1 text-muted-foreground">
                   Clock Out Date
@@ -124,8 +124,8 @@ export function TimeLogDialog({ record }: { record: any }) {
                 <Popover open={openOut} onOpenChange={setOpenOut}>
                   <PopoverTrigger asChild>
                     <Button
-                      variant="default"
-                      className="data-[empty=true]:text-muted-foreground w-53 justify-between text-left font-normal"
+                      variant="outline"
+                      className="w-full justify-between text-left font-normal"
                     >
                       {dateOut ? format(dateOut, "dd MMM yyyy") : "Pick a date"}
                       <ChevronDownIcon className="h-4 w-4 opacity-50" />
@@ -143,7 +143,6 @@ export function TimeLogDialog({ record }: { record: any }) {
                     />
                   </PopoverContent>
                 </Popover>
-                {/* Hidden input for        */}
                 <input
                   type="hidden"
                   name="clock_out_date"
@@ -151,7 +150,7 @@ export function TimeLogDialog({ record }: { record: any }) {
                 />
               </div>
 
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-3 sm:w-30">
                 <Label className="px-1 text-muted-foreground">Time</Label>
                 <Input
                   name="clock_out_time"
