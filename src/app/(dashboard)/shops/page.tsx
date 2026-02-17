@@ -17,7 +17,7 @@ export default async function ShopsPage() {
 
   const { data: shops } = await supabase
     .from("shops")
-    .select("id, name, admin_password")
+    .select("id, name, admin_password_hash")
     .order("name");
 
   return (
@@ -41,7 +41,6 @@ export default async function ShopsPage() {
           <TableHeader>
             <TableRow>
               <TableHead>Shop Name</TableHead>
-              <TableHead>Admin Password</TableHead>
               <TableHead className="hidden md:table-cell">ID</TableHead>
               <TableHead className="text-right pr-5">Actions</TableHead>
             </TableRow>
@@ -51,7 +50,6 @@ export default async function ShopsPage() {
             {shops?.map((shop) => (
               <TableRow key={shop.id}>
                 <TableCell className="font-medium">{shop.name}</TableCell>
-                <TableCell>{shop.admin_password}</TableCell>
                 <TableCell className="text-muted-foreground hidden md:table-cell text-xs font-mono">
                   {shop.id}
                 </TableCell>

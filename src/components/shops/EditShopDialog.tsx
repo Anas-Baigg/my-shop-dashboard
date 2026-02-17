@@ -15,28 +15,31 @@ import {
 import { Pencil } from "lucide-react";
 import { UpdateShopAction } from "@/app/(dashboard)/shops/action";
 
-export type Shop = { id: string; name: string; admin_password: number };
+export type Shop = { id: string; name: string; admin_password_hash: string };
 
 export function EditShopDialog({ shop }: { shop: Shop }) {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState(shop.name);
-  const [pass, setPass] = useState(String(shop.admin_password));
+  const [pass, setPass] = useState("");
 
   // keep fields in sync if you open dialog for a different shop, etc.
   useEffect(() => {
     if (!open) return;
     setName(shop.name);
-    setPass(String(shop.admin_password));
-  }, [open, shop.id, shop.name, shop.admin_password]);
+    setPass("");
+  }, [open, shop.id, shop.name]);
 
   async function handleSave() {
     const formData = new FormData();
     formData.append("name", name);
-    formData.append("password", pass);
+    if (pass.length === 5) {
+      formData.append("password", pass);
+    }
     const result = await UpdateShopAction(shop.id, formData);
 
     if (result?.success) {
       toast.success(result.message);
+      setPass("");
       setOpen(false);
     } else {
       toast.error(result?.message || "An unknown error occurred");
@@ -55,7 +58,7 @@ export function EditShopDialog({ shop }: { shop: Shop }) {
           <DialogTitle>Edit Shop</DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-4 py-4">
+        <div className="space-y-6 py-4">
           <Input
             placeholder="Shop Name"
             value={name}
@@ -73,6 +76,9 @@ export function EditShopDialog({ shop }: { shop: Shop }) {
               setPass(digits);
             }}
           />
+          <p className="text-[12px] text-muted-foreground italic">
+            * Leave empty to keep your current password.
+          </p>
         </div>
 
         <DialogFooter>
